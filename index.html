@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spreadsheet Data Generator</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #6b8cbc;
+            --light: #f5f7fa;
+            --dark: #333;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 6px;
+        }
+        
+        h2 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .column-list {
+            margin-top: 20px;
+        }
+        
+        .column-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .column-item > div {
+            margin-right: 15px;
+        }
+        
+        .preview-section {
+            margin-top: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .actions button {
+            padding: 12px 25px;
+        }
+        
+        .options-input {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .options-input p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .column-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .column-item > div {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spreadsheet Data Generator</h1>
+        <p class="description">Buat data spreadsheet dengan berbagai tipe kolom sesuai kebutuhan Anda</p>
+        
+        <div class="form-section">
+            <h2>Pengaturan Data</h2>
+            <div class="form-group">
+                <label for="rowCount">Jumlah Baris Data:</label>
+                <input type="number" id="rowCount" min="1" max="1000" value="10">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Kolom Data</h2>
+            <div class="form-group">
+                <label for="columnName">Nama Kolom:</label>
+                <input type="text" id="columnName" placeholder="Contoh: Nama, Usia, Kota">
+            </div>
+            
+            <div class="form-group">
+                <label for="columnType">Tipe Data:</label>
+                <select id="columnType">
+                    <option value="name">Nama (dengan angka)</option>
+                    <option value="age">Umur</option>
+                    <option value="region">Daerah</option>
+                    <option value="category">Kategori</option>
+                    <option value="randomText">Teks Acak</option>
+                    <option value="randomNumber">Angka Acak</option>
+                    <option value="date">Tanggal</option>
+                    <option value="boolean">Ya/Tidak</option>
+                </select>
+            </div>
+            
+            <!-- Input untuk opsi khusus tipe Daerah -->
+            <div class="form-group" id="regionOptionsGroup" style="display: none;">
+                <label for="regionOptions">Daftar Daerah (pisahkan dengan koma):</label>
+                <textarea id="regionOptions" placeholder="Contoh: Jakarta, Bandung, Semarang, Surabaya"></textarea>
+            </div>
+            
+            <!-- Input untuk opsi khusus tipe Kategori -->
+            <div class="form-group" id="categoryOptionsGroup" style="display: none;">
+                <label for="categoryOptions">Daftar Kategori (pisahkan dengan koma):</label>
+                <textarea id="categoryOptions" placeholder="Contoh: Elektronik, Pakaian, Makanan, Otomotif"></textarea>
+            </div>
+            
+            <button id="addColumn">Tambah Kolom</button>
+            
+            <div class="column-list" id="columnList">
+                <!-- Daftar kolom akan ditambahkan di sini -->
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <h2>Pratinjau Data</h2>
+            <div id="previewTable">
+                <p>Tambahkan kolom untuk melihat pratinjau data</p>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="generateData" class="btn-success">Hasilkan Data</button>
+            <button id="downloadCSV" class="btn-success">Unduh sebagai CSV</button>
+            <button id="resetForm" class="btn-danger">Reset Form</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const columnTypeSelect = document.getElementById('columnType');
+            const regionOptionsGroup = document.getElementById('regionOptionsGroup');
+            const categoryOptionsGroup = document.getElementById('categoryOptionsGroup');
+            const addColumnBtn = document.getElementById('addColumn');
+            const columnList = document.getElementById('columnList');
+            const generateDataBtn = document.getElementById('generateData');
+            const downloadCSVBtn = document.getElementById('downloadCSV');
+            const resetFormBtn = document.getElementById('resetForm');
+            const previewTable = document.getElementById('previewTable');
+            
+            let columns = [];
+            let generatedData = [];
+            
+            // Tampilkan/sembunyikan input opsi berdasarkan tipe data
+            columnTypeSelect.addEventListener('change', function() {
+                // Sembunyikan semua grup opsi terlebih dahulu
+                regionOptionsGroup.style.display = 'none';
+                categoryOptionsGroup.style.display = 'none';
+                
+                // Tampilkan grup opsi yang sesuai
+                if (this.value === 'region') {
+                    regionOptionsGroup.style.display = 'block';
+                } else if (this.value === 'category') {
+                    categoryOptionsGroup.style.display = 'block';
+                }
+            });
+            
+            // Tambah kolom baru
+            addColumnBtn.addEventListener('click', function() {
+                const columnName = document.getElementById('columnName').value.trim();
+                const columnType = document.getElementById('columnType').value;
+                
+                if (!columnName) {
+                    alert('Silakan masukkan nama kolom');
+                    return;
+                }
+                
+                // Cek apakah nama kolom sudah ada
+                if (columns.some(col => col.name === columnName)) {
+                    alert('Nama kolom sudah ada');
+                    return;
+                }
+                
+                // Siapkan opsi khusus berdasarkan tipe
+                let options = [];
+                if (columnType === 'region') {
+                    const regionOptions = document.getElementById('regionOptions').value.trim();
+                    if (!regionOptions) {
+                        alert('Silakan masukkan daftar daerah');
+                        return;
+                    }
+                    options = regionOptions.split(',').map(item => item.trim()).filter(item => item);
+                } else if (columnType === 'category') {
+                    const categoryOptions = document.getElementById('categoryOptions').value.trim();
+                    if (!categoryOptions) {
+                        alert('Silakan masukkan daftar kategori');
+                        return;
+                    }
+                    options = categoryOptions.split(',').map(item => item.trim()).filter(item => item);
+                }
+                
+                const column = {
+                    name: columnName,
+                    type: columnType,
+                    options: options
+                };
+                
+                columns.push(column);
+                renderColumnList();
+                
+                // Reset form
+                document.getElementById('columnName').value = '';
+                document.getElementById('regionOptions').value = '';
+                document.getElementById('categoryOptions').value = '';
+                regionOptionsGroup.style.display = 'none';
+                categoryOptionsGroup.style.display = 'none';
+                
+                // Jika ada data yang sudah dihasilkan, perbarui pratinjau
+                if (generatedData.length > 0) {
+                    generateData();
+                }
+            });
+            
+            // Render daftar kolom
+            function renderColumnList() {
+                columnList.innerHTML = '';
+                
+                if (columns.length === 0) {
+                    columnList.innerHTML = '<p>Belum ada kolom yang ditambahkan</p>';
+                    return;
+                }
+                
+                columns.forEach((column, index) => {
+                    const columnItem = document.createElement('div');
+                    columnItem.className = 'column-item';
+                    
+                    let optionsText = '';
+                    if (column.type === 'region' || column.type === 'category') {
+                        optionsText = `<div>Opsi: ${column.options.join(', ')}</div>`;
+                    }
+                    
+                    columnItem.innerHTML = `
+                        <div><strong>${column.name}</strong></div>
+                        <div>Tipe: ${getTypeDisplayName(column.type)}</div>
+                        ${optionsText}
+                        <button class="btn-danger remove-column" data-index="${index}">Hapus</button>
+                    `;
+                    
+                    columnList.appendChild(columnItem);
+                });
+                
+                // Tambahkan event listener untuk tombol hapus
+                document.querySelectorAll('.remove-column').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        columns.splice(index, 1);
+                        renderColumnList();
+                        
+                        // Jika ada data yang sudah dihasilkan, perbarui pratinjau
+                        if (generatedData.length > 0) {
+                            generateData();
+                        }
+                    });
+                });
+            }
+            
+            // Dapatkan nama tampilan untuk tipe data
+            function getTypeDisplayName(type) {
+                const typeNames = {
+                    'name': 'Nama (dengan angka)',
+                    'age': 'Umur',
+                    'region': 'Daerah',
+                    'category': 'Kategori',
+                    'randomText': 'Teks Acak',
+                    'randomNumber': 'Angka Acak',
+                    'date': 'Tanggal',
+                    'boolean': 'Ya/Tidak'
+                };
+                
+                return typeNames[type] || type;
+            }
+            
+            // Hasilkan data
+            generateDataBtn.addEventListener('click', generateData);
+            
+            function generateData() {
+                const rowCount = parseInt(document.getElementById('rowCount').value);
+                
+                if (columns.length === 0) {
+                    alert('Tambahkan setidaknya satu kolom terlebih dahulu');
+                    return;
+                }
+                
+                generatedData = [];
+                
+                // Data untuk tipe yang tidak memerlukan opsi manual
+                const regionsDefault = ['Jakarta', 'Bandung', 'Surabaya', 'Medan', 'Makassar', 'Yogyakarta', 'Semarang', 'Denpasar', 'Palembang', 'Balikpapan'];
+                
+                // Hasilkan data untuk setiap baris
+                for (let i = 0; i < rowCount; i++) {
+                    const row = {};
+                    
+                    columns.forEach(column => {
+                        switch (column.type) {
+                            case 'name':
+                                row[column.name] = `Nama${i+1}`;
+                                break;
+                            case 'age':
+                                row[column.name] = Math.floor(Math.random() * 50) + 18; // Umur 18-67
+                                break;
+                            case 'region':
+                                // Gunakan opsi manual jika ada, jika tidak gunakan default
+                                const regionOptions = column.options.length > 0 ? column.options : regionsDefault;
+                                row[column.name] = regionOptions[Math.floor(Math.random() * regionOptions.length)];
+                                break;
+                            case 'category':
+                                // Pastikan ada opsi yang tersedia
+                                if (column.options.length === 0) {
+                                    row[column.name] = 'Kategori Default';
+                                } else {
+                                    row[column.name] = column.options[Math.floor(Math.random() * column.options.length)];
+                                }
+                                break;
+                            case 'randomText':
+                                row[column.name] = generateRandomText(5);
+                                break;
+                            case 'randomNumber':
+                                row[column.name] = Math.floor(Math.random() * 1000);
+                                break;
+                            case 'date':
+                                const startDate = new Date(2020, 0, 1);
+                                const endDate = new Date();
+                                const randomDate = new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
+                                row[column.name] = randomDate.toISOString().split('T')[0];
+                                break;
+                            case 'boolean':
+                                row[column.name] = Math.random() > 0.5 ? 'Ya' : 'Tidak';
+                                break;
+                        }
+                    });
+                    
+                    generatedData.push(row);
+                }
+                
+                renderPreviewTable();
+            }
+            
+            // Render tabel pratinjau
+            function renderPreviewTable() {
+                if (generatedData.length === 0) {
+                    previewTable.innerHTML = '<p>Belum ada data yang dihasilkan</p>';
+                    return;
+                }
+                
+                let tableHTML = '<table><thead><tr>';
+                
+                // Header kolom
+                columns.forEach(column => {
+                    tableHTML += `<th>${column.name}</th>`;
+                });
+                
+                tableHTML += '</tr></thead><tbody>';
+                
+                // Baris data (maksimal 10 baris untuk pratinjau)
+                const previewRowCount = Math.min(generatedData.length, 10);
+                for (let i = 0; i < previewRowCount; i++) {
+                    tableHTML += '<tr>';
+                    
+                    columns.forEach(column => {
+                        tableHTML += `<td>${generatedData[i][column.name]}</td>`;
+                    });
+                    
+                    tableHTML += '</tr>';
+                }
+                
+                tableHTML += '</tbody></table>';
+                
+                if (generatedData.length > 10) {
+                    tableHTML += `<p class="preview-note">Menampilkan 10 dari ${generatedData.length} baris</p>`;
+                }
+                
+                previewTable.innerHTML = tableHTML;
+            }
+            
+            // Fungsi pembantu untuk menghasilkan teks acak
+            function generateRandomText(length) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+            
+            // Unduh sebagai CSV
+            downloadCSVBtn.addEventListener('click', function() {
+                if (generatedData.length === 0) {
+                    alert('Hasilkan data terlebih dahulu sebelum mengunduh');
+                    return;
+                }
+                
+                let csvContent = '';
+                
+                // Header
+                csvContent += columns.map(column => `"${column.name}"`).join(',') + '\n';
+                
+                // Data
+                generatedData.forEach(row => {
+                    const rowData = columns.map(column => {
+                        let value = row[column.name];
+                        // Jika nilai mengandung koma, kutip dengan tanda kutip
+                        if (typeof value === 'string' && value.includes(',')) {
+                            value = `"${value}"`;
+                        }
+                        return value;
+                    });
+                    
+                    csvContent += rowData.join(',') + '\n';
+                });
+                
+                // Buat blob dan unduh
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'data_spreadsheet.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+            
+            // Reset form
+            resetFormBtn.addEventListener('click', function() {
+                columns = [];
+                generatedData = [];
+                document.getElementById('columnName').value = '';
+                document.getElementById('columnType').value = 'name';
+                document.getElementById('regionOptions').value = '';
+                document.getElementById('categoryOptions').value = '';
+                regionOptionsGroup.style.display = 'none';
+                categoryOptionsGroup.style.display = 'none';
+                document.getElementById('rowCount').value = '10';
+                renderColumnList();
+                previewTable.innerHTML = '<p>Tambahkan kolom untuk melihat pratinjau data</p>';
+            });
+            
+            // Inisialisasi
+            renderColumnList();
+        });
+    </script>
+</body>
+</html>
